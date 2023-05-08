@@ -1,0 +1,85 @@
+/* Set default font family and size */
+body {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+  }
+  
+  /* Style the navigation bar */
+  nav {
+    background-color: #2a9d8f;
+    background-image: linear-gradient(45deg, #2a9d8f, #e9c46a, #f4a261, #e76f51);
+    overflow: hidden;
+  }
+  
+  nav a {
+    float: left;
+    color: #fff;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  nav a:hover {
+    background-color: #e9c46a;
+    color: #264653;
+  }
+  
+  /* Center the page content */
+  .container {
+    margin: 0 auto;
+    max-width: 800px;
+    padding: 40px;
+    text-align: center;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Style the headings */
+  h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    color: #e76f51;
+  }
+  
+  /* Style the paragraph text */
+  p {
+    font-size: 24px;
+    line-height: 1.5;
+    color: #264653;
+  }
+  
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+  }
+  
+  th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  th {
+    background-color: #2a9d8f;
+    color: white;
+  }
+  
+  tr:hover {
+    background-color: #f4a261;
+    color: white;
+  }
+  
+  a {
+    color: #e76f51;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
