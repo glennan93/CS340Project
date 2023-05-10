@@ -25,6 +25,8 @@
             const postId = urlParams.get('id');
         </script>
 
+    <!-- container for information on specific post 
+    Eventually this will autogenerate from database using post id-->
         <div class="details post-container">
             <h1>Post Details</h1>
             <h3>View information about a specific post and update, create or delete comments here.</h3>
@@ -33,6 +35,8 @@
               <p><strong>Contents:</strong> Post contents go here.</p>
               <p><strong>Hashtags:</strong> List of hashtags go here.</p>
             </div>
+            <!-- Container to hold comments
+            Eventually these will autogenerate using post id-->
             <div class="post-comments">
               <table class="comments-table">
                 <thead>
@@ -77,6 +81,7 @@
                 </tbody>
                 </table>
 
+            <!-- Container for new comment form-->
             </div>
             <h1>New Comment</h1>
             <form>
