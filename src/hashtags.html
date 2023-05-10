@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SocialByte</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="banner">
+      <h1>SocialByte</h1>
+    </div>    
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="posts.html">Posts</a>
+      <a href="users.html">Users</a>
+    </nav>
+    <main>
+    <div class="container">
+	<h1>Current Hashtags</h1>
+	<table>
+		<thead>
+			<tr>
+				<th>Hashtag</th>
+				<th></th>
+                <th></th>
+			</tr>
+		</thead>
+		<tbody id="hashtags-table">
+			<!-- This is where the hashtags will be dynamically added -->
+            <tr>
+                <td>#ComputerScience</td>
+                <td><a href="edit-hashtag.html?id=1">Edit</a>
+                <td>                    
+                    <button class="delete-hashtag-btn">
+                    Delete
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>#Dogs</td>
+                <td><a href="edit-hashtag.html?id=2">Edit</td>   
+                <td>
+                    <button class="delete-hashtag-btn">
+                    Delete
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>#Hiking</td>
+                <td><a href="edit-hashtag.html?id=3">Edit</td>   
+                <td>
+                    <button class="delete-hashtag-btn">
+                    Delete
+                    </button>
+                </td>
+            </tr> 
+		</tbody>
+	</table>
+    </div>
+    <div class="container">
+        <label><h1>Create a New Hashtag</h1></label> 
+        <form id="addHashtag">            
+            <fieldset class="fields">
+                <label> Hashtag Name </label> <input type="text" name="hashtagName">
+                <label> Description</label> <input type="text" name="description">
+            </fieldset> 
+            <input class="btn" type="submit" id="submitHashtag" value="Add Hashtag">
+        </form>
+    </div>
+    </main>
+    <footer>
+        <p>&copy; 2023 SocialByte</p>
+    </footer>
+</body>
+</html>

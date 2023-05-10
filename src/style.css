@@ -4,82 +4,265 @@ body {
     font-size: 16px;
   }
   
-  /* Style the navigation bar */
-  nav {
-    background-color: #2a9d8f;
-    background-image: linear-gradient(45deg, #2a9d8f, #e9c46a, #f4a261, #e76f51);
-    overflow: hidden;
-  }
+/* Style the navigation bar */
+nav {
+  background-color: #2a9d8f;
+  background-image: linear-gradient(45deg, #2a9d8f, #e9c46a, #f4a261, #e76f51);
+  overflow: hidden;
+}
+
+nav a {
+  float: left;
+  color: #fff;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+nav a:hover {
+  background-color: #e9c46a;
+  color: #264653;
+}
+
+/* Center the page content */
+.container {
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 40px;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+
+
+/* Style the headings */
+h1 {
+  font-size: 48px;
+  margin-bottom: 20px;
+  color: #e76f51;
+}
+
+/* Style the paragraph text */
+p {
+  font-size: 24px;
+  line-height: 1.5;
+  color: #264653;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px auto;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  width:auto;
+}
+
+th {
+  background-color: #2a9d8f;
+  color: white;
+}
+
+tr:hover {
+  background-color: #f4a261;
+  color: white;
+}
+
+a {
+  color: #e76f51;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Style the Banner */
+.banner {
+  background-color: #fff;
+  text-align: center;
+  color: #fff;
+  padding: 10px;
+}
+
+.banner h1 {
+  margin: 0;
+  font-size: 30px;
+  color: #e76f51;
+}
+
+/* Style Post Container */
+.post-container {
+  border: 2px solid #2a9d8f;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 20px 0;
+  background-color: #fff;
+  box-shadow: 0px 0px 10px #999;
+}
+
+.post-container h2 {
+  font-size: 24px;
+  margin-top: 0;
+}
+
+.post-container p {
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+.post-contents {
+  border: 2px solid #2a9d8f;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  box-shadow: 0px 0px 10px #999;
+}
+
+.post-contents p {
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+.post-comments {
+  border: 2px solid #2a9d8f;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #fff;
+  box-shadow: 0px 0px 10px #999;
+}
+
+.post-comments h3 {
+  font-size: 24px;
+  margin-top: 0;
+}
+
+.post-comments ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-comments li {
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+/* New Post textbox Style */
+textarea {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+/* Style User Form */
+.user-container form {
   
-  nav a {
-    float: left;
-    color: #fff;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    font-size: 18px;
-    font-weight: bold;
-  }
+  margin-top: 2em;
+  padding: 1em;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f5f5f5;
+  text-align: left;
+  width: 25%;
+  display: inline-block;
+  text-align: left;
   
-  nav a:hover {
-    background-color: #e9c46a;
-    color: #264653;
-  }
+}
+
+.user-container form label {
+  display: inline-block;
+  margin-bottom: 0.5em;
+  font-weight: bold;
+}
+
+.user-container form input[type="text"] {
+  display: block;
+  width: 50%;
+  margin-bottom: 1em;
+  padding: 0.5em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.user-container form .btn {
+  display: inline-block;
+  padding: 0.5em 1em;
+  margin-top: 1em;
+  font-size: 1em;
+  font-weight: bold;
+  color: #fff;
+  background-color: #e76f51;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
   
-  /* Center the page content */
-  .container {
-    margin: 0 auto;
-    max-width: 800px;
-    padding: 40px;
-    text-align: center;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  }
+}
+
+.user-container form .btn:hover {
+  background-color: #e44923;
+}
+
+/* Center the user page content */
+.user-container {
+  margin: 0 auto;
+  max-width: 99%;
+  padding: 40px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+
+}
+
+.container-for-users {
+  text-align: center;
+}
+.container form .btn {
+  display: inline-block;
+  padding: 0.5em 1em;
+  margin-top: 1em;
+  font-size: 1em;
+  font-weight: bold;
+  color: #fff;
+  background-color: #e76f51;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
   
-  /* Style the headings */
-  h1 {
-    font-size: 48px;
-    margin-bottom: 20px;
-    color: #e76f51;
-  }
-  
-  /* Style the paragraph text */
-  p {
-    font-size: 24px;
-    line-height: 1.5;
-    color: #264653;
-  }
-  
-  table {
-    border-collapse: collapse;
-    width: 100%;
-    max-width: 800px;
-    margin: 20px auto;
-  }
-  
-  th, td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  th {
-    background-color: #2a9d8f;
-    color: white;
-  }
-  
-  tr:hover {
-    background-color: #f4a261;
-    color: white;
-  }
-  
-  a {
-    color: #e76f51;
-    text-decoration: none;
-  }
-  
-  a:hover {
-    text-decoration: underline;
-  }
+}
+
+/* Center the form and increase font size */
+.user-edit-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size: 1.2em;
+  margin-top: 20px;
+}
+
+/* Style the form inputs */
+.fields {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  width: 100%;
+}
   
