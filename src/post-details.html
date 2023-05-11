@@ -15,7 +15,8 @@
             <a href="index.html">Home</a></li>
             <a href="posts.html">Posts</a></li>
             <a href="users.html">Users</a></li>   
-            <a href="hashtags.html">Hashtags</a>   
+            <a href="hashtags.html">Hashtags</a> 
+            <a href="comments.html">Comments</a>  
         </nav>
     </header>
     <main>
@@ -33,7 +34,26 @@
             <div class="post-contents">
               <p><strong>Author:</strong> Test Name</p>
               <p><strong>Contents:</strong> Post contents go here.</p>
-              <p><strong>Hashtags:</strong> List of hashtags go here.</p>
+              <table class="hashtags-table">
+                <thead>
+                    <tr>
+                        <th>Hashtags</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>#Hashtag</td>
+                        <td>
+                            <button class="delete-hashtag-btn">
+                                Delete
+                            </button>
+                        </td>
+
+                    </tr>
+            
+                </tbody>
+              </table></p>
             </div>
             <!-- Container to hold comments
             Eventually these will autogenerate using post id-->

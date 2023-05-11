@@ -108,9 +108,9 @@ ENGINE = InnoDB;
 -- Data inserts for Posts_Hashtags
 --
 
-INSERT INTO `Posts_Hashtags` (`post_hash_id`, `hashtag_id`, `post_id`) VALUES (1, 4, 1);
-INSERT INTO `Posts_Hashtags` (`post_hash_id`, `hashtag_id`, `post_id`) VALUES (2, 2, 2);
-INSERT INTO `Posts_Hashtags` (`post_hash_id`, `hashtag_id`, `post_id`) VALUES (3, 1, 3);
+INSERT INTO `Posts_Hashtags` (`hashtag_id`, `post_id`) VALUES (4, 1);
+INSERT INTO `Posts_Hashtags` (`hashtag_id`, `post_id`) VALUES (2, 2);
+INSERT INTO `Posts_Hashtags` (`hashtag_id`, `post_id`) VALUES (1, 3);
 
 --
 -- Data inserts for Users 

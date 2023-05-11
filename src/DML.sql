@@ -48,6 +48,10 @@ INSERT INTO Hashtags (hashtag_id, description, frequency)
 VALUES (4, 'sports', 1);
 VALUES (:hashtag_id, :description, :frequency);
 
+-- Intersection Table Insertion
+INSERT INTO Posts_Hashtags (hashtag_id, post_id)
+VALUES (:hashtag_id_from_hashtag_input, :post_id_from_post_page);
+
 -- Edit a user's info
 UPDATE Users SET name = :nameInput, email = :emailInput, password = :passwordInput,
                         username = :usernameInput, about = :aboutInput, 
@@ -69,8 +73,12 @@ UPDATE Comments SET contents = :contentsInput
 WHERE comment_id = :comment_id_selected_from_comment_edit_page;
 
 -- Edit a hashtag
--- TODO: Intersection table updating
+UPDATE Hashtags SET description = :descriptionInput
+WHERE hashtag_id = :hashtag_id_from_table;
 
+--Intersection Table Update for dis-association
+DELETE FROM Posts_Hashtags WHERE post_id = :post_id_selected_from_posts_page
+AND hashtag_id = :hashtag_id_from_input;
 
 -- Delete a user
 DELETE FROM Users 
@@ -87,7 +95,7 @@ DELETE FROM Comments
 WHERE comment_id = :comment_id_selected_from_post_page;
 
 -- Delete a hashtag
--- TODO: Again I am unsure how to implement with the intersection table
+DELETE FROM Hashtags WHERE hashtag_id = :hashtag_id_from_hashtag_input;
 
 
 
