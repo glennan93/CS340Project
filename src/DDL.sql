@@ -44,10 +44,8 @@ CREATE OR REPLACE TABLE `Posts` (
   `post_id` INT AUTO_INCREMENT,
   `author` INT NOT NULL,
   `contents` VARCHAR(255) NOT NULL,
-  `hashtag_id` INT NOT NULL,
   PRIMARY KEY (`post_id`),
   UNIQUE INDEX `post_id_UNIQUE` (`post_id` ASC) VISIBLE,
-  UNIQUE INDEX `hashtag_id_UNIQUE` (`hashtag_id` ASC) VISIBLE,
   INDEX `author_idx` (`author` ASC) VISIBLE,
   CONSTRAINT `author`
     FOREIGN KEY (`author`)
@@ -128,9 +126,9 @@ INSERT INTO `Users` (`user_id`, `name`, `email`, `password`, `username`, `about`
 -- Data inserts for Posts
 --
 
-INSERT INTO `Posts` (`post_id`, `author`, `contents`, `hashtag_id`) VALUES (1, 1, 'Hi! This is a test!', 4);
-INSERT INTO `Posts` (`post_id`, `author`, `contents`, `hashtag_id`) VALUES (2, 4, 'Hi, this is a sample post!', 2);
-INSERT INTO `Posts` (`post_id`, `author`, `contents`, `hashtag_id`) VALUES (3, 2, 'This is a sample post!', 1);
+INSERT INTO `Posts` (`post_id`, `author`, `contents`) VALUES (1, 1, 'Hi! This is a test!');
+INSERT INTO `Posts` (`post_id`, `author`, `contents`) VALUES (2, 4, 'Hi, this is a sample post!');
+INSERT INTO `Posts` (`post_id`, `author`, `contents`) VALUES (3, 2, 'This is a sample post!');
 
 --
 -- Data insert for Comments
