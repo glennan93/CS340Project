@@ -39,13 +39,12 @@ INSERT INTO Comments (comment_id, contents, parent_post, commenter)
 VALUES (:comment_id, :contents, :parent_post, :commenter);
 
 -- Add a new hashtag
--- Auto increment hashtage by finding amount of hastags and adding one
+-- Auto increment hashtags by finding amount of hashtags and adding one
 -- Frequency also needs to be incremented
 --
 -- TODO: How do we insert hashtags so they connect to posts?
 -- This creates a hashtag but it isn't tied to any posts.
 INSERT INTO Hashtags (hashtag_id, description, frequency)
-VALUES (4, 'sports', 1);
 VALUES (:hashtag_id, :description, :frequency);
 
 -- Intersection Table Insertion
