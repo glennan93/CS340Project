@@ -13,7 +13,7 @@ WHERE Comments.parent_post = :post_id;
 SELECT Hashtags.description
 FROM Hashtags
 INNER JOIN Posts_Hashtags ON Posts_Hashtags.hashtag_id = Hashtags.hashtag_id
-WHERE Posts_Hashtags.post_id = :post_id;
+WHERE Posts_Hashtags.post_id = Posts.post_id;
 
 -- Selecting all users in the database
 -- Displays user_id, name, and username

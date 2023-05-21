@@ -90,10 +90,12 @@ CREATE OR REPLACE TABLE `Posts_Hashtags` (
   `added_date` DATETIME DEFAULT NOW(),
   PRIMARY KEY (`post_hash_id`),
   UNIQUE INDEX `post_hash_id_UNIQUE` (`post_hash_id` ASC) VISIBLE,
+  UNIQUE INDEX `hashtag_id_UNIQUE` (`hashtag_id` ASC) VISIBLE,
+  UNIQUE INDEX `post_id_UNIQUE` (`post_id` ASC) VISIBLE,
   CONSTRAINT `hashtag`
     FOREIGN KEY (`hashtag_id`)
     REFERENCES `Hashtags` (`hashtag_id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `post_id`
     FOREIGN KEY (`post_id`)
@@ -106,7 +108,7 @@ ENGINE = InnoDB;
 -- Data inserts for Posts_Hashtags
 --
 
-INSERT INTO `Posts_Hashtags` (`hashtag_id`, `post_id`) VALUES (3, 1);
+INSERT INTO `Posts_Hashtags` (`hashtag_id`, `post_id`) VALUES (4, 1);
 INSERT INTO `Posts_Hashtags` (`hashtag_id`, `post_id`) VALUES (2, 2);
 INSERT INTO `Posts_Hashtags` (`hashtag_id`, `post_id`) VALUES (1, 3);
 
