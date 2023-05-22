@@ -1,13 +1,12 @@
 // App.js
-
 /*
     SETUP
 */
 var express = require('express');   // We are using the express library for the web server
 var app     = express();            // We need to instantiate an express object to interact with the server in our code
-app.use(express.json())
-app.use(express.urlencoded({extended: true}))
-app.use(express.static('public'))
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+app.use(express.static('public'));
 PORT        = 6523;                 // Set a port number at the top so it's easy to change in the future
 const { engine } = require('express-handlebars');
 var exphbs = require('express-handlebars');     // Import express-handlebars
@@ -20,12 +19,14 @@ var db = require('./database/db-connector')
 /*
     ROUTES
 */
-// app.js 
-
 // app.js
-
-app.get('/', function(req, res)
+app.get('/index', function(req, res)
     {
+        res.render('index');                    // Note the call to render() and not send(). Using render() ensures the templating engine
+    });                                         // will process this file, before sending the finished HTML to the client.
+app.get('/posts', function(req, res)
+    {
+        //query db on page load
         let query1 = "SELECT Posts.post_id, Users.name, Posts.contents FROM Posts Inner Join Users ON Posts.author = Users.user_id;";    //define query for posts page
 
         db.pool.query(query1, function(error, rows, fields){    //Execute the query
