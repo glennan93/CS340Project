@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SocialByte - Posts</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="banner">
+      <h1>SocialByte</h1>
+    </div>    
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="posts.html">Posts</a>
+      <a href="users.html">Users</a>
+      <a href="hashtags.html">Hashtags</a>
+      <a href="comments.html">Comments</a>
+
+    </nav>
+    <!--Container to hold posts
+    Posts will populate from database eventually -->
+    <div class="container">
+      <h1>Posts</h1>
+      <h2>Browse, create, update and delete posts on this page.</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Post Number</th>            
+            <th>Author</th>
+            <th>Contents</th> 
+            <th></th>
+            <th></th>           
+          </tr>
+        </thead>
+        <!--Each post link here will use the post ID to link to a post contents page unique to that post.-->  
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Andrew</td>        
+            <td><a href="post-details.html?id=1">Hi! This is a test!</a></td>             
+            <td><a href="edit-post.html?id=1">Edit</td>
+            <td>
+              <button class="delete-post-btn">
+                Delete
+              </button>
+            </td>
+              
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>David</td>
+            <td><a href="post-details.html?id=2">Hi, this is a sample post!</a></td>   
+            <td><a href="edit-post.html?id=2">Edit</td>   
+            <td>
+              <button class="delete-post-btn">
+                Delete
+              </button>
+            </td>      
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Betel</td>
+            <td><a href="post-details.html?id=3">This is a sample post!</a></td>  
+            <td><a href="edit-post.html?id=3">Edit</td> 
+            <td>
+              <button class="delete-post-btn">
+                Delete
+              </button>
+            </td>         
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!--Container for New Post form -->
+    <div class="container">
+      <h1>New Post</h1>
+      <form>
+        <div class="form-group">
+          <label for="postAuthor">Who is the author of this post?</label>
+          <select>
+            <option value="option1">Andrew</option>
+            <option value="option2">Betel</option>
+            <option value="option3">David</option>
+          </select>
+          <br></br>
+          <label for="postContent">Type your post here:</label>
+          <textarea class="form-control" id="postContent" rows="3"></textarea>
+          <!--Hashtags added in hashtags table will generate here for user to add-->
+          <label for="postHashtags">What hashtag(s) would you like to add?</label>
+          <br/>
+          <input type="checkbox" id="computerscience" name="computerscience" value="#ComputerScience">
+          <label for="computerscience"> #ComputerScience</label><br>
+          <input type="checkbox" id="soccer" name="soccer" value="Soccer">
+          <label for="soccer"> #Soccer</label><br>
+          <input type="checkbox" id="dogs" name="dogs" value="Dogs">
+          <label for="dogs"> #Dogs</label><br><br>
+          
+          
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  <!-- Footer -->
+  <footer>
+      <p>&copy; 2023 SocialByte</p>
+  </footer>
+  </body>
+</html>

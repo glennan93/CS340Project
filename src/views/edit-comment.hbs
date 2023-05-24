@@ -1,0 +1,46 @@
+<!--//This file was adapted from CS340's nodejs starter app repo.-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SocialByte - Edit Comment</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/app.css">
+  </head>
+  <body>
+    <div class="banner">
+      <h1>SocialByte</h1>
+    </div>    
+    <nav>
+      <a href="index">Home</a>
+      <a href="posts">Posts</a>
+      <a href="users">Users</a>
+      <a href="hashtags">Hashtags</a>
+      <a href="comments">Comments</a>
+    </nav>
+    <main>
+        <script>
+            // Retrieve the comment ID from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const commentId = urlParams.get('id');
+        </script>
+
+    <!-- Container for editing comments. Eventually comment will load instead of filler text. -->
+    <div class="container">
+      <h1>Edit Comment</h1>
+      <form>
+        <div class="form-group">
+          <br></br>
+          <label for="commentContent">Content:</label>
+          <textarea class="form-control" id="commentContent" rows="3">This will be the original comment content.</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+      </form>
+    </div>
+    </main>
+    <footer>
+      <p>&copy; 2023 SocialByte</p>
+    </footer>
+  </body>
+</html>

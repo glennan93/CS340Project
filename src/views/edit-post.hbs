@@ -1,13 +1,15 @@
 <!--//This file was adapted from CS340's nodejs starter app repo.-->
+
 <!DOCTYPE html>
 <html>
   <head>
-    <title>SocialByte - Posts</title>
+    <title>SocialByte - Edit Post</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/css/app.css">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="/js/delete_post.js"></script>
+
   </head>
   <body>
     <div class="banner">
@@ -19,10 +21,31 @@
       <a href="users">Users</a>
       <a href="hashtags">Hashtags</a>
       <a href="comments">Comments</a>
-
     </nav>
-    <!--Container to hold posts
-    Posts will populate from database eventually -->
+    <main>
+    <!-- Container for post edit form. 
+    Eventually contents from post will autofill the textbox when page loads-->
+    <div class="container">
+      <h1>Edit Post</h1>
+      <form id="update-post-form-ajax">
+          <label for="postAuthor">Author name: </label>
+          <select name="postAuthor" id="mySelect">
+            <option value="">Select a User</option>
+            {{#each users}}
+              <option value="{{this.user_id}}">{{this.name}}</option>
+            {{/each}}
+          </select>
+
+          <br/>
+          <br/>
+          <label for="postContent">Type edited post here:</label>
+          <textarea name="postContent" id="postContent" rows="3" required>{{selectedContents}}</textarea>
+
+          <input type="submit">
+      </form>
+      
+    </div>
+
     <div class="container">
       <h1>Posts</h1>
       <h2>Browse, create, update and delete posts on this page.</h2>
@@ -41,8 +64,8 @@
           {{#each data}}
           <tr data-value={{this.post_id}}>
             <td>{{this.post_id}}</td>
-            <td>{{this.name}}</td>        
-            <td><a href="post-details?id={{this.post_id}}">{{this.contents}}</a></td>             
+            <td data-field="name">{{this.name}}</td>        
+            <td data-field="content"><a href="post-details?id={{this.post_id}}">{{this.contents}}</a></td>             
             <td><a href="edit-post?id={{this.post_id}}">Edit</td>
             <td><button onclick="deletePost({{this.post_id}})">
                 Delete
@@ -55,37 +78,10 @@
       </table>
       
     </div>
-    
-    <!--Container for New Post form -->
-    <div class="container">
-      <h1>New Post</h1>
-      <form id="add-post-form" method="POST" action="/add-post-form">
-        <div class="form-group">
-          <label for="postAuthor">Who is the author of this post?</label>
-          <input type="text" name="postAuthor" id="postAuthor">
-          <br></br>
-          <label for="postContent">Type your post here:</label>
-          <textarea name="postContent" id="postContent" rows="3" required></textarea>
-          <!--Hashtags added in hashtags table will generate here for user to add-->
-          <label for="postHashtags">What hashtag(s) would you like to add?</label>
-          <br/>
-          <input type="checkbox" id="computerscience" name="postHashtags" value="#ComputerScience">
-          <label for="computerscience"> #ComputerScience</label><br>
-          <input type="checkbox" id="soccer" name="postHashtags" value="#Soccer">
-          <label for="soccer"> #Soccer</label><br>
-          <input type="checkbox" id="dogs" name="postHashtags" value="#Dogs">
-          <label for="dogs"> #Dogs</label><br><br>
-
-          
-          
-        </div>
-        <input type="submit">
-      </form>
-    </div>
-
-  <!-- Footer -->
-  <footer>
+    </main>
+    <footer>
       <p>&copy; 2023 SocialByte</p>
-  </footer>
+    </footer>
+    <script src="/js/update_post.js"></script>
   </body>
 </html>
