@@ -45,7 +45,46 @@ app.get('/edit-hashtag', function(req, res)
 
 app.get('/edit-user', function(req, res)
     {
-        res.render('edit-user');                    // Note the call to render() and not send(). Using render() ensures the templating engine
+        let userID = parseInt(req.query.id); // Retrieve the post ID from the query parameter
+
+        let loadUsers = "SELECT * FROM Users;";
+
+        let queryUser = "SELECT * FROM Users WHERE user_id = ?;";
+
+        // Execute the first query to fetch posts data
+        db.pool.query(loadUsers, function(error, usersRows, fields) {
+            if (error) {
+            console.log(error);
+            res.sendStatus(400);
+            return;
+            }
+        
+            // Execute the second query to fetch users data
+            db.pool.query(queryUser, userID,function(error, userRows, fields) {
+            if (error) {
+                console.log(error);
+                res.sendStatus(400);
+                return;
+            }
+        
+            // Find the selected post based on the post ID
+            let selectedUser = userRows.find(user => user.user_id === userID);
+            if (!selectedUser) {
+                // If the selected post is not found, handle the error accordingly
+                res.sendStatus(404);
+                return;
+            }
+        
+            // Render the edit-post template with data
+            res.render('edit-user', {
+                data: usersRows, // Pass users data 
+                users: userRows, // Pass user data 
+                userID: userID, // Pass the user ID
+                selectedUser: selectedUser // Pass the selected post's contents
+                });
+            });
+        })
+        console.log(req.body)
     });
 
 app.get('/hashtags', function(req, res)
@@ -126,6 +165,8 @@ app.get('/edit-post', function(req, res) {
         });
     });
 });
+
+
       
 
 app.post('/add-user-ajax', function(req, res) 
@@ -304,6 +345,49 @@ app.delete('/delete-user-ajax/', function(req,res,next){
     });
 });
 
+app.put('/put-user-ajax', function(req,res,next){
+    let data = req.body;
+    let userID = req.query.id;
+    
+    console.log('Received userID: ', userID);
+
+    let name = data.name;
+    let email = data.email;
+    let password = data.password;
+    let username = data.username;
+    let about = data.about;
+    let interests = data.interests;
+    let location = data.location;
+  
+    let queryUpdateUser = `UPDATE Users SET name = ?, email = ?, password = ?, username = ?, about = ?, interests = ?, location = ? WHERE Users.user_id = ?`;
+    let selectUsers = `SELECT * FROM Users`;
+  
+          // Run the 1st query
+          db.pool.query(queryUpdateUser, [name, email, password, username, about, interests, location, userID], function(error, rows, fields){
+              if (error) {
+  
+              // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+              console.log(error);
+              res.sendStatus(400);
+              }
+  
+              // If there was no error, we run our second query and return that data so we can use it to update the people's
+              // table on the front-end
+              else
+              {
+                  // Run the second query
+                  db.pool.query(selectUsers, function(error, rows, fields) {
+  
+                      if (error) {
+                          console.log(error);
+                          res.sendStatus(400);
+                      } else {
+                          res.send(rows);
+                      }
+                  })
+              }
+  })
+});
 
 
 /*
