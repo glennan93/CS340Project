@@ -7,6 +7,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/css/app.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="/js/delete_user.js"></script>
   </head>
   <body>
     <div class="banner">
@@ -25,7 +27,7 @@
         <div class="user-container">
         <h1>Users</h1>
         <h2>View, create, update or delete user information on this page.</h2>
-        <table>
+        <table id="user-table">
             <thead>
             <tr>            
                 <th>User ID</th>
@@ -42,58 +44,25 @@
             </tr>
             </thead>
             <tbody>
-            <tr>            
-                <td>1</td>
-                <td>Andrew</td>
-                <td>andrew@test.com</td>       
+                {{#each data}}
+            <tr data-value={{this.user_id}}>            
+                <td>{{this.user_id}}</td>
+                <td>{{this.name}}</td>
+                <td>{{this.email}}</td>       
                 <td>******</td>
-                <td>UsrAndrew</td>
-                <td>Hi, I'm Andrew!</td>
-                <td>Computer Science, Dogs, Cats</td>
-                <td>United States</td>
-                <td>05-10-2023</td>
-                <td><a href="edit-user.html?id=1">Edit</td>
+                <td>{{this.username}}</td>
+                <td>{{this.about}}</td>
+                <td>{{this.interests}}</td>
+                <td>{{this.location}}</td>
+                <td>{{moment this.user_since format="DD MMMM - YYYY"}}</td>
+                <td><a href="edit-user?id={{this.user_id}}">Edit</td>
                 <td>
-                <button class="delete-post-btn">
+                <button onclick="deleteUser({{this.user_id}})">
                     Delete
                 </button>
                 </td>              
             </tr>
-
-            <tr>            
-                <td>2</td>
-                <td>Betel</td>
-                <td>betel@test.com</td>       
-                <td>******</td>
-                <td>UsrBetel</td>
-                <td>Hi, I'm Betel!</td>
-                <td>Dogs, Cats, Tennis Balls</td>
-                <td>United States</td>
-                <td>05-10-2023</td>
-                <td><a href="edit-user.html?id=1">Edit</td>
-                <td>
-                <button class="delete-post-btn">
-                    Delete
-                </button>
-                </td>              
-            </tr>
-            <tr>            
-                <td>3</td>
-                <td>David</td>
-                <td>david@test.com</td>       
-                <td>******</td>
-                <td>UsrDavid</td>
-                <td>Hi, I'm David!</td>
-                <td>Computer Science</td>
-                <td>United States</td>
-                <td>05-10-2023</td>
-                <td><a href="edit-user.html?id=1">Edit</td>
-                <td>
-                <button class="delete-post-btn">
-                    Delete
-                </button>
-                </td>              
-            </tr>
+            {{/each}}
             </tbody>
         </table>
         </div>
@@ -102,18 +71,36 @@
         <div class="container-for-users">
         <div class="user-container">
             <label><h1>Create a New User</h1></label> 
-            <form id="addUser">            
+            <form id="add-user-form-ajax">            
                 <fieldset class="fields">
-                    <label> Name </label> <input type="text" name="name">
-                    <label> Email</label> <input type="text" name="email">
-                    <label> Password</label> <input type="text" name="password">
-                    <label> Username</label> <input type="text" name="username">
-                    <label> About</label> <input type="text" name="about">
-                    <label> Interests</label> <input type="text" name="interests">
-                    <label> Location</label> <input type="text" name="location">
+
+                    <label for="name"> Name </label> 
+                    <input type="text" name="name" id="name">
+
+                    <label for="email"> Email</label> 
+                    <input type="text" name="email" id="email">
+
+                    <label for="password"> Password</label> 
+                    <input type="text" name="password" id="password">
+
+                    <label for="username"> Username</label> 
+                    <input type="text" name="username" id="username">
+
+                    <label for="about"> About</label> 
+                    <input type="text" name="about" id="about">
+
+                    <label for="interests" > Interests</label> 
+                    <input type="text" name="interests" id="interests">
+
+                    <label for="location"> Location</label> 
+                    <input type="text" name="location" id="location">
+
                 </fieldset> 
                 <input class="btn" type="submit" id="submitUser" value="Add User">
             </form>
+
+        {{!-- Embed javascript to handle the DOM manipulation and AJAX request--}}
+        <script src="./js/add_user.js"></script>
         </div>
         </div>
     </main>

@@ -15,7 +15,7 @@ const { engine } = require('express-handlebars');
 var exphbs = require('express-handlebars');     // Import express-handlebars
 app.engine('.hbs', engine({extname: ".hbs"}));  // Create an instance of the handlebars engine to process templates
 app.set('view engine', '.hbs');                 // Tell express to use the handlebars engine whenever it encounters a *.hbs file.
-
+var helpers = require('handlebars-helpers')();
 
 // Database
 var db = require('./database/db-connector')
@@ -50,7 +50,7 @@ app.get('/edit-user', function(req, res)
 
 app.get('/hashtags', function(req, res)
     {
-        res.render('hashtags');                    // Note the call to render() and not send(). Using render() ensures the templating engine
+        res.render('hashtags');                         // Note the call to render() and not send(). Using render() ensures the templating engine
     });
 
 app.get('/post-details', function(req, res)
@@ -60,7 +60,14 @@ app.get('/post-details', function(req, res)
 
 app.get('/users', function(req, res)
     {
-        res.render('users');                    // Note the call to render() and not send(). Using render() ensures the templating engine
+        //query db on page load
+        let query1 = "SELECT * FROM Users;";
+        
+        //execute the query
+        db.pool.query(query1, function(error, rows, fields){
+            res.render('users', {data:rows});           // Note the call to render() and not send(). Using render() ensures the templating engine
+        })
+                            
     });
 
 app.get('/posts', function(req, res)
@@ -120,7 +127,47 @@ app.get('/edit-post', function(req, res) {
     });
 });
       
-// app.js
+
+app.post('/add-user-ajax', function(req, res) 
+{   //add user function adapted from node.js starter guide for CS340
+
+    // Capture the incoming data and parse it back to a JS object
+    let data = req.body;
+
+    // Create the query and run it on the database
+    query1 = `INSERT INTO Users (name, email, password, username, about, interests, location) VALUES ('${data.name}', '${data.email}', '${data.password}', '${data.username}', '${data.about}', '${data.interests}', '${data.location}')`;
+    db.pool.query(query1, function(error, rows, fields){
+
+        // Check to see if there was an error
+        if (error) {
+
+            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+            console.log(error)
+            res.sendStatus(400);
+        }
+        else
+        {
+            // If there was no error, perform a SELECT * on Users
+            query2 = `SELECT * FROM Users;`;
+            db.pool.query(query2, function(error, rows, fields){
+
+                // If there was an error on the second query, send a 400
+                if (error) {
+                    
+                    // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                    console.log(error);
+                    res.sendStatus(400);
+                }
+                // If all went well, send the results of the query back.
+                else
+                {
+                    res.send(rows);
+                }
+            })
+        }
+    })
+});
+
 
 app.post('/add-post-form', function(req, res){
     // Capture the incoming data and parse it back to a JS object
@@ -200,9 +247,32 @@ app.delete('/delete-post-ajax/', function(req,res,next){
                       } else {
                           res.sendStatus(204);
                       }
-                  })
+                  });
+              };
+  });
+});
+
+app.delete('/delete-user-ajax/', function(req,res,next){
+    let data = req.body;
+    let userID = parseInt(data.id);
+    let deleteUser= `DELETE FROM Users WHERE user_id = ?`;
+  
+  
+          // Run the 1st query
+          db.pool.query(deleteUser, [userID], function(error, rows, fields){
+              if (error) {
+  
+              // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+              console.log(error);
+              res.sendStatus(400);
               }
-  })});
+  
+              else
+              {
+                  res.sendStatus(204);
+              };
+  });
+});
 
   app.put('/put-post-ajax', function (req, res, next) {
     let data = {
