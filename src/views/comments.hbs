@@ -79,18 +79,21 @@
       <form>
         <div class="form-group">
           <label for="commentAuthor">Who is the author of this comment?</label>
-          <select>
-            <option value="option1">Andrew</option>
-            <option value="option2">Betel</option>
-            <option value="option3">David</option>
+          <select name="commentAuthor" id="commentAuthorSelect">
+            <option value="">Select a User</option>
+            {{#each users}}
+              <option value="{{this.user_id}}">{{this.name}}</option>
+            {{/each}}
           </select>
+
           <br></br>
           <label for="commentParent">What post would you like to comment on?</label>
-          <select>
-            <option value="option1">1</option>
-            <option value="option2">2</option>
-            <option value="option3">3</option>
-          </select>
+          <select name="parentPostID" id="parentPostIDSelect">
+            <option value="">Select a Post</option>
+            {{#each posts}}
+              <option value="{{this.post_id}}">{{this.id}}</option>
+            {{/each}}
+
           <br></br>
           <label for="postContent">Type your comment here:</label>
           <textarea class="form-control" id="postContent" rows="3"></textarea>
