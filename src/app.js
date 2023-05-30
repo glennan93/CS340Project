@@ -10,7 +10,7 @@ var app     = express();            // We need to instantiate an express object 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'));
-PORT        = 6523;                 // Set a port number at the top so it's easy to change in the future
+PORT        = 7861;                 // Set a port number at the top so it's easy to change in the future
 const { engine } = require('express-handlebars');
 var exphbs = require('express-handlebars');     // Import express-handlebars
 app.engine('.hbs', engine({extname: ".hbs"}));  // Create an instance of the handlebars engine to process templates
@@ -27,11 +27,6 @@ app.get('/index', function(req, res)
     {
         res.render('index');                    // Note the call to render() and not send(). Using render() ensures the templating engine
     });                                         // will process this file, before sending the finished HTML to the client.
-
-app.get('/comments', function(req, res)
-    {
-        res.render('comments');                    // Note the call to render() and not send(). Using render() ensures the templating engine
-    });
 
 app.get('/edit-comment', function(req, res)
     {
@@ -105,6 +100,17 @@ app.get('/users', function(req, res)
         //execute the query
         db.pool.query(query1, function(error, rows, fields){
             res.render('users', {data:rows});           // Note the call to render() and not send(). Using render() ensures the templating engine
+        })
+                            
+    });
+
+app.get('/comments', function(req, res)
+    {
+        //query db on page load
+        let query1 = "SELECT * FROM Comments;";
+        //execute the query
+        db.pool.query(query1, function(error, rows, fields){
+            res.render('comments', {data:rows});           // Note the call to render() and not send(). Using render() ensures the templating engine
         })
                             
     });
@@ -301,6 +307,28 @@ app.delete('/delete-user-ajax/', function(req,res,next){
   
           // Run the 1st query
           db.pool.query(deleteUser, [userID], function(error, rows, fields){
+              if (error) {
+  
+              // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+              console.log(error);
+              res.sendStatus(400);
+              }
+  
+              else
+              {
+                  res.sendStatus(204);
+              };
+  });
+});
+
+app.delete('/delete-comment-ajax/', function(req,res,next){
+    let data = req.body;
+    let commentID = parseInt(data.id);
+    let deleteComment= `DELETE FROM Comments WHERE comment_id = ?`;
+  
+  
+          // Run the 1st query
+          db.pool.query(deleteComment, [commentID], function(error, rows, fields){
               if (error) {
   
               // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.

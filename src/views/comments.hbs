@@ -7,6 +7,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/css/app.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="/js/delete_comment.js"></script>
   </head>
   <body>
     <div class="banner">
@@ -24,10 +26,10 @@
     <div class="container">
       <h1>Comments</h1>
       <h2>Browse, create, update and delete comments on this page.</h2>
-      <table>
+      <table id="comments-table">
         <thead>
           <tr>            
-            <th>Author</th>
+            <th>Authors</th>
             <th>Contents</th> 
             <th>Parent Post</th>
             <th></th>
@@ -36,71 +38,37 @@
         </thead>
         <!--Each comment link here will use the comment ID to link to a comment's contents page unique to that comment.-->  
         <tbody>
-          <tr>            
-            <td>Andrew</td>  
-            <td>This is an example comment.</td>     
-            <td><a href="post-details.html?id=1">Parent Post</a></td> 
-            <td><a href="edit-comment.html?id=1">Edit</td>            
+          {{#each data}}
+        <tr data-value={{this.comment_id}}>            
+            <td>{{this.commenter}}</td>
+            <td>{{this.contents}}</td>
+            <td>{{this.parent_post}}</td>  
             <td>
-              <button class="delete-comment-btn">
-                Delete
-              </button>
-            </td>              
-          </tr>
-          <tr>
-            <td>David</td>  
-            <td>This is an example comment.</td>     
-            <td><a href="post-details.html?id=2">Parent Post</a></td> 
-            <td><a href="edit-comment.html?id=2">Edit</td>            
-            <td>
-              <button class="delete-comment-btn">
-                Delete
-              </button>
-            </td>     
-          </tr>
-          <tr>
-            <td>Betel</td>  
-            <td>This is an example comment.</td>     
-            <td><a href="post-details.html?id=3">Parent Post</a></td> 
-            <td><a href="edit-comment.html?id=3">Edit</td>            
-            <td>
-              <button class="delete-comment-btn">
-                Delete
-              </button>
-            </td>         
-          </tr>
+                <button onclick="deleteComment({{this.comment_id}})">
+                    Delete
+                </button>
+            </td>                
+        </tr>
+            {{/each}}
         </tbody>
-      </table>
+    </table>
     </div>
 
-    <!--Container for New Post form -->
-    <div class="container">
-      <h1>New Comment</h1>
-      <form>
-        <div class="form-group">
-          <label for="commentAuthor">Who is the author of this comment?</label>
-          <select name="commentAuthor" id="commentAuthorSelect">
-            <option value="">Select a User</option>
-            {{#each users}}
-              <option value="{{this.user_id}}">{{this.name}}</option>
-            {{/each}}
-          </select>
+    <!-- Container for comment form to create new comment -->
+    <div class="comments-container">
+            <label><h1>Create a New Comment</h1></label> 
+            <form id="add-comment-form-ajax">            
+                <fieldset class="fields">
+                    
 
-          <br></br>
-          <label for="commentParent">What post would you like to comment on?</label>
-          <select name="parentPostID" id="parentPostIDSelect">
-            <option value="">Select a Post</option>
-            {{#each posts}}
-              <option value="{{this.post_id}}">{{this.id}}</option>
-            {{/each}}
+                </fieldset> 
+                <input class="btn" type="submit" id="submitCommment" value="Add Comment">
+            </form>
 
-          <br></br>
-          <label for="postContent">Type your comment here:</label>
-          <textarea class="form-control" id="postContent" rows="3"></textarea>
+        {{!-- Embed javascript to handle the DOM manipulation and AJAX request--}}
+        <script src="./js/add_comment.js"></script>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
-    </div>
+    
   <!-- Footer -->
   <footer>
       <p>&copy; 2023 SocialByte</p>
