@@ -10,7 +10,7 @@ var app     = express();            // We need to instantiate an express object 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'));
-PORT        = 7861;                 // Set a port number at the top so it's easy to change in the future
+PORT        = 6523;                 // Set a port number at the top so it's easy to change in the future
 const { engine } = require('express-handlebars');
 var exphbs = require('express-handlebars');     // Import express-handlebars
 app.engine('.hbs', engine({extname: ".hbs"}));  // Create an instance of the handlebars engine to process templates
@@ -30,7 +30,46 @@ app.get('/index', function(req, res)
 
 app.get('/edit-comment', function(req, res)
     {
-        res.render('edit-comment');                    // Note the call to render() and not send(). Using render() ensures the templating engine
+        let commentID = parseInt(req.query.id); // Retrieve the post ID from the query parameter
+
+        let loadComments = "SELECT * FROM Comments;";
+
+        let queryComment = "SELECT * FROM Comments WHERE comment_id = ?;";
+
+        // Execute the first query to fetch posts data
+        db.pool.query(loadComments, function(error, commentsRows, fields) {
+            if (error) {
+            console.log(error);
+            res.sendStatus(400);
+            return;
+            }
+        
+            // Execute the second query to fetch users data
+            db.pool.query(queryComment, commentID, function(error, commentRows, fields) {
+            if (error) {
+                console.log(error);
+                res.sendStatus(400);
+                return;
+            }
+        
+            // Find the selected post based on the post ID
+            let selectedComment = commentRows.find(comment => comment.comment_id === commentID);
+            if (!selectedComment) {
+                // If the selected post is not found, handle the error accordingly
+                res.sendStatus(404);
+                return;
+            }
+        
+            // Render the edit-post template with data
+            res.render('edit-comment', {
+                data: commentsRows, // Pass users data 
+                commments: commentRows, // Pass user data 
+                commentID: commentID, // Pass the user ID
+                selectedComment: selectedComment // Pass the selected post's contents
+                });
+            });
+        })
+        console.log(req.body)                   // Note the call to render() and not send(). Using render() ensures the templating engine
     });
 
 app.get('/edit-hashtag', function(req, res)
@@ -343,7 +382,7 @@ app.delete('/delete-comment-ajax/', function(req,res,next){
   });
 });
 
-  app.put('/put-post-ajax', function (req, res, next) {
+app.put('/put-post-ajax', function (req, res, next) {
     let data = {
         postAuthor: parseInt(req.body.postAuthor),
         postContent: req.body.postContent
@@ -415,6 +454,121 @@ app.put('/put-user-ajax', function(req,res,next){
                   })
               }
   })
+});
+
+app.put('/put-comment-ajax', function(req,res,next){
+    let data = req.body;
+    let commentID = req.query.id;
+    
+    console.log('Received commentID: ', commentID);
+
+    let contents = data.contents;
+  
+    let queryUpdateComment = `UPDATE Comments SET contents = ? WHERE Comments.comment_id = ?;`;
+    let selectComments = `SELECT * FROM Comments;`;
+  
+          // Run the 1st query
+          db.pool.query(queryUpdateComment, [contents, commentID], function(error, rows, fields){
+              if (error) {
+  
+              // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+              console.log(error);
+              res.sendStatus(400);
+              }
+  
+              // If there was no error, we run our second query and return that data so we can use it to update the people's
+              // table on the front-end
+              else
+              {
+                  // Run the second query
+                  db.pool.query(selectComments, function(error, rows, fields) {
+  
+                      if (error) {
+                          console.log(error);
+                          res.sendStatus(400);
+                      } else {
+                          res.send(rows);
+                      }
+                  })
+              }
+  })
+});
+
+app.post('/add-comment-form', function(req, res){
+    // Capture the incoming data and parse it back to a JS object
+    let data = req.body;
+
+    // Get user ID
+    let getUserQuery = `SELECT user_id FROM Users WHERE name = '${data['commentAuthor']}'`;
+    let getPostQuery = `SELECT post_id FROM Posts WHERE post_id = '${data['parentPost']}'`;
+
+    // Checking if the user exists in the database
+    db.pool.query(getUserQuery, function(error, rows, fields){
+        if (error) {
+            window.alert('User not found.');
+            res.sendStatus(400);
+        } else {
+            if (rows.length > 0){
+                // Get user ID from query result
+                let userId = rows[0].user_id;
+                
+                db.pool.query(getPostQuery, function(error, rows, fields){
+                    if (error) {
+                        window.alert('Post not found.');
+                        res.sendStatus(400);
+                    } else {
+                        if (rows.length > 0){
+                            query1 = `INSERT INTO Comments (contents, parent_post, commenter) VALUES ('${data['commentContent']}', '${data['parentPost']}', ${userId})`;
+                            db.pool.query(query1, function(error, rows, fields){
+
+                                // Check to see if there was an error
+                                if (error) {
+                    
+                                    // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                                    console.log(error)
+                                    res.sendStatus(400);
+                                }
+                    
+                                // If there was no error, we redirect back to our root route, which automatically runs the SELECT * FROM bsg_people and
+                                // presents it on the screen
+                                else
+                                {
+                                    res.redirect('/comments');
+                                }
+                            });
+
+                        } else {
+                            window.alert('Post not found.');
+                            res.sendStatus(400);
+                        }
+                    }
+                });
+            
+
+            
+
+            } else {
+                window.alert('User not found.');
+                res.sendStatus(400);
+            }
+        }
+    });
+
+    // Checking if the post exists in the database
+    db.pool.query(getPostQuery, function(error, rows, fields){
+        console.log("POST");
+        if (error) {
+            window.alert('Post not found.');
+            res.sendStatus(400);
+        } else {
+            if (rows.length > 0){
+                foundPost = true
+            } else {
+                window.alert('Post not found.');
+                res.sendStatus(400);
+            }
+        }
+    });
 });
 
 
