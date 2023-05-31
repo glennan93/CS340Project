@@ -417,6 +417,106 @@ app.put('/put-user-ajax', function(req,res,next){
   })
 });
 
+app.post('/add-comment-form', function(req, res){
+    // Capture the incoming data and parse it back to a JS object
+    let data = req.body;
+
+    // Get user ID
+    let getUserQuery = `SELECT user_id FROM Users WHERE name = '${data['commentAuthor']}'`;
+    let getPostQuery = `SELECT post_id FROM Posts WHERE post_id = '${data['parentPost']}'`;
+
+    // Checking if the user exists in the database
+    db.pool.query(getUserQuery, function(error, rows, fields){
+        if (error) {
+            window.alert('User not found.');
+            res.sendStatus(400);
+        } else {
+            if (rows.length > 0){
+                // Get user ID from query result
+                let userId = rows[0].user_id;
+                
+                db.pool.query(getPostQuery, function(error, rows, fields){
+                    if (error) {
+                        window.alert('Post not found.');
+                        res.sendStatus(400);
+                    } else {
+                        if (rows.length > 0){
+                            query1 = `INSERT INTO Comments (contents, parent_post, commenter) VALUES ('${data['commentContent']}', '${data['parentPost']}', ${userId})`;
+                            db.pool.query(query1, function(error, rows, fields){
+
+                                // Check to see if there was an error
+                                if (error) {
+                    
+                                    // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                                    console.log(error)
+                                    res.sendStatus(400);
+                                }
+                    
+                                // If there was no error, we redirect back to our root route, which automatically runs the SELECT * FROM bsg_people and
+                                // presents it on the screen
+                                else
+                                {
+                                    res.redirect('/comments');
+                                }
+                            });
+
+                        } else {
+                            window.alert('Post not found.');
+                            res.sendStatus(400);
+                        }
+                    }
+                });
+            
+
+            
+
+            } else {
+                window.alert('User not found.');
+                res.sendStatus(400);
+            }
+        }
+    });
+
+    // Checking if the post exists in the database
+    db.pool.query(getPostQuery, function(error, rows, fields){
+        console.log("POST");
+        if (error) {
+            window.alert('Post not found.');
+            res.sendStatus(400);
+        } else {
+            if (rows.length > 0){
+                foundPost = true
+            } else {
+                window.alert('Post not found.');
+                res.sendStatus(400);
+            }
+        }
+    });
+
+    // // Running the post query
+    // if (userFound == true && postFound == true) {
+    //     console.log("HEHRHEHRE");
+    //     query1 = `INSERT INTO Comments (contents, parent_post, commenter) VALUES ('${data['commentContent']}', '${parseInt(data['parentPost'])}', ${userId})`;
+    //     db.pool.query(query1, function(error, rows, fields){
+
+    //         // Check to see if there was an error
+    //         if (error) {
+
+    //             // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+    //             console.log(error)
+    //             res.sendStatus(400);
+    //         }
+
+    //         // If there was no error, we redirect back to our root route, which automatically runs the SELECT * FROM bsg_people and
+    //         // presents it on the screen
+    //         else
+    //         {
+    //             res.redirect('/comments');
+    //         }
+    //     });
+    // }
+});
+
 
 /*
     LISTENER
