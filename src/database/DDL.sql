@@ -65,8 +65,8 @@ CREATE OR REPLACE TABLE `Comments` (
   `commenter` INT NOT NULL,
   PRIMARY KEY (`comment_id`),
   UNIQUE INDEX `comment_id_UNIQUE` (`comment_id` ASC) VISIBLE,
-  UNIQUE INDEX `parent_post_UNIQUE` (`parent_post` ASC) VISIBLE,
-  UNIQUE INDEX `commenter_UNIQUE` (`commenter` ASC) VISIBLE,
+  INDEX `parent_post_UNIQUE` (`parent_post` ASC) VISIBLE,
+  INDEX `commenter_UNIQUE` (`commenter` ASC) VISIBLE,
   CONSTRAINT `parent_post`
     FOREIGN KEY (`parent_post`)
     REFERENCES `Posts` (`post_id`)
