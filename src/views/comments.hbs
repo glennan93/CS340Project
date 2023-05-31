@@ -42,7 +42,8 @@
         <tr data-value={{this.comment_id}}>            
             <td>{{this.commenter}}</td>
             <td>{{this.contents}}</td>
-            <td>{{this.parent_post}}</td>  
+            <td>{{this.parent_post}}</td> 
+            <td><a href="edit-comment?id={{this.comment_id}}">Edit</td> 
             <td>
                 <button onclick="deleteComment({{this.comment_id}})">
                     Delete

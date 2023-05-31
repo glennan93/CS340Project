@@ -7,6 +7,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/css/app.css">
+    <script src="/js/delete_comment.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   </head>
   <body>
     <div class="banner">
@@ -29,18 +31,20 @@
     <!-- Container for editing comments. Eventually comment will load instead of filler text. -->
     <div class="container">
       <h1>Edit Comment</h1>
-      <form>
+      <form id="edit-comment-form-ajax">
         <div class="form-group">
           <br></br>
           <label for="commentContent">Content:</label>
-          <textarea class="form-control" id="commentContent" rows="3">This will be the original comment content.</textarea>
+          <textarea class="form-control" id="commentContent" rows="3">{{selectedComment.contents}}</textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <input type="submit">
       </form>
     </div>
+    
     </main>
     <footer>
       <p>&copy; 2023 SocialByte</p>
     </footer>
+    <script src="/js/update_comment.js"></script>
   </body>
 </html>
