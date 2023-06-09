@@ -148,8 +148,6 @@ app.get('/comments', function(req, res)
         //query db on page load
         let query1 = "SELECT Comments.comment_id, Users.name, Comments.contents, Comments.parent_post FROM Comments JOIN Users ON Comments.commenter = Users.user_id;"
 
-        //let query1 = "SELECT * FROM Comments;";
-
         let query2 = "SELECT name FROM Users;";
 
         let query3 = "SELECT post_id FROM Posts;";
