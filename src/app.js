@@ -147,9 +147,24 @@ app.get('/comments', function(req, res)
     {
         //query db on page load
         let query1 = "SELECT * FROM Comments;";
+
+        let query2 = "SELECT name FROM Users;";
+
+        let query3 = "SELECT post_id FROM Posts;";
         //execute the query
         db.pool.query(query1, function(error, rows, fields){
-            res.render('comments', {data:rows});           // Note the call to render() and not send(). Using render() ensures the templating engine
+            // Saving comments
+            let comments = rows;
+
+            db.pool.query(query2, (error, rows, fields) => {
+                let userNames = rows;
+
+                db.pool.query(query3, (error, rows, fields) => {
+                    let postIds = rows;
+                    return res.render('comments', {data: comments, userNames: userNames, postIds: postIds})
+                })
+            })
+            //res.render('comments', {data:rows});           // Note the call to render() and not send(). Using render() ensures the templating engine
         })
                             
     });

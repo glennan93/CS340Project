@@ -61,11 +61,22 @@
             <form id="add-comment-form" method="POST" action="/add-comment-form"> 
               <div class="form-group">
                 <label for="commentAuthor">Who is the author of the comment?</label>
-                <input type="text" name="commentAuthor" id="commentAuthor">
+                <select name="commentAuthor" id="commentAuthor">
+                    <option value="">Select a User</option>
+                    {{#each userNames}}
+                    <option value="{{this.name}}">{{this.name}}</option>
+                    {{/each}}
+                </select>
                 <br></br>
 
                 <label for="parentPost">What post is the comment for?</label>
-                <input type="number" name="parentPost" id="parentPost">
+                <select name="parentPost" id="parentPost">
+                    <option value="">Select a Post</option>
+                    {{#each postIds}}
+                    <option value ="{{this.post_id}}">{{this.post_id}}</option>
+                    {{/each}}
+                </select>
+
                 <br></br>
 
                 <label for="commentContent">Type your comment here:</label>
