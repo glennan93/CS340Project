@@ -62,7 +62,13 @@
       <form id="add-post-form" method="POST" action="/add-post-form">
         <div class="form-group">
           <label for="postAuthor">Who is the author of this post?</label>
-          <input type="text" name="postAuthor" id="postAuthor">
+          <select name="postAuthor" id="postAuthor">
+            <option value="">Select a User</option>
+            {{#each userNames}}
+            <option value="{{this.name}}">{{this.name}}</option>
+            {{/each}}
+          </select>
+          <!--<input type="text" name="postAuthor" id="postAuthor">-->
           <br></br>
           <label for="postContent">Type your post here:</label>
           <textarea name="postContent" id="postContent" rows="3" required></textarea>

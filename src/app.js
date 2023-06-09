@@ -10,7 +10,7 @@ var app     = express();            // We need to instantiate an express object 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'));
-PORT        = 6523;                 // Set a port number at the top so it's easy to change in the future
+PORT        = 8974;                 // Set a port number at the top so it's easy to change in the future
 const { engine } = require('express-handlebars');
 var exphbs = require('express-handlebars');     // Import express-handlebars
 app.engine('.hbs', engine({extname: ".hbs"}));  // Create an instance of the handlebars engine to process templates
@@ -159,9 +159,20 @@ app.get('/posts', function(req, res)
         //query db on page load
         let query1 = "SELECT Posts.post_id, Users.name, Posts.contents FROM Posts Inner Join Users ON Posts.author = Users.user_id;";    //define query for posts page
         console.log(query1);
-        db.pool.query(query1, function(error, rows, fields){    //Execute the query
 
-            res.render('posts', {data:rows});   // Render the posts.hbs file, and also send the renderer
+        let query2 = "SELECT name FROM Users;";
+
+        db.pool.query(query1, function(error, rows, fields){    //Execute the query
+            // Saving the posts
+            let posts = rows;
+            
+            db.pool.query(query2, (error, rows, fields) => {
+
+                let userNames = rows;
+                return res.render('posts', {data: posts, userNames: userNames});
+            })
+
+            //res.render('posts', {data:rows});   // Render the posts.hbs file, and also send the renderer
                                                 // an object where 'data' is equal to the 'rows' we 
                                                 // received back from the query
         })
