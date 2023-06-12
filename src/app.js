@@ -10,7 +10,7 @@ var app     = express();            // We need to instantiate an express object 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'));
-PORT        = 8974;                 // Set a port number at the top so it's easy to change in the future
+PORT        = 6523;                 // Set a port number at the top so it's easy to change in the future
 const { engine } = require('express-handlebars');
 var exphbs = require('express-handlebars');     // Import express-handlebars
 app.engine('.hbs', engine({extname: ".hbs"}));  // Create an instance of the handlebars engine to process templates
@@ -72,10 +72,46 @@ app.get('/edit-comment', function(req, res)
         console.log(req.body)                   // Note the call to render() and not send(). Using render() ensures the templating engine
     });
 
-app.get('/edit-hashtag', function(req, res)
-    {
-        res.render('edit-hashtag');                    // Note the call to render() and not send(). Using render() ensures the templating engine
-    });
+    app.get('/edit-hashtag', function(req, res) {
+        let hashtagID = parseInt(req.query.id); // Retrieve the hashtag ID from the query parameter
+      
+        let loadHashtags = "SELECT * FROM Hashtags;";
+        let queryHashtag = "SELECT * FROM Hashtags WHERE hashtag_id = ?;";
+      
+        // Execute the first query to fetch hashtags data
+        db.pool.query(loadHashtags, function(error, hashtagsRows, fields) {
+          if (error) {
+            console.log(error);
+            res.sendStatus(400);
+            return;
+          }
+      
+          // Execute the second query to fetch the selected hashtag data
+          db.pool.query(queryHashtag, hashtagID, function(error, selectedHashtagRows, fields) {
+            if (error) {
+              console.log(error);
+              res.sendStatus(400);
+              return;
+            }
+      
+            // Find the selected hashtag based on the hashtag ID
+            let selectedHashtag = selectedHashtagRows.find(hashtag => hashtag.hashtag_id === hashtagID);
+            if (!selectedHashtag) {
+              // If the selected hashtag is not found, handle the error accordingly
+              res.sendStatus(404);
+              return;
+            }
+      
+            // Render the edit-hashtag template with data
+            res.render('edit-hashtag', {
+              data: hashtagsRows, // Pass hashtags data
+              hashtagID: hashtagID, // Pass the hashtag ID
+              selectedHashtag: selectedHashtag // Pass the selected hashtag's contents
+            });
+          });
+        });
+      });
+      
 
 app.get('/edit-user', function(req, res)
     {
@@ -120,15 +156,37 @@ app.get('/edit-user', function(req, res)
         })
         console.log(req.body)
     });
+app.get('/posts_hashtags', function(req, res)
+{
+    //query db on page load
+    let query1 = "SELECT * FROM Posts_Hashtags;";
+    let query2 = "SELECT hashtag_id FROM Hashtags;";
+    let query3 = "SELECT post_id FROM Posts;";
+    
+     //execute the query
+     db.pool.query(query1, function(error, rows, fields){
+        // Saving comments
+        let table = rows
+        db.pool.query(query2, (error, rows, fields) => {
+            let hashtags = rows;
+
+            db.pool.query(query3, (error, rows, fields) => {
+                let postIds = rows;
+                return res.render('posts_hashtags', {table: table, hashtags: hashtags, postIds: postIds})
+                })
+            })
+        });
+    });
 
 app.get('/hashtags', function(req, res)
     {
-        res.render('hashtags');                         // Note the call to render() and not send(). Using render() ensures the templating engine
-    });
-
-app.get('/post-details', function(req, res)
-    {
-        res.render('post-details');                    // Note the call to render() and not send(). Using render() ensures the templating engine
+        //query db on page load
+        let query1 = "SELECT * FROM Hashtags;";
+        
+        //execute query
+        db.pool.query(query1, function(error, rows, fields){
+            res.render('hashtags', {data:rows});
+        })
     });
 
 app.get('/users', function(req, res)
@@ -164,7 +222,7 @@ app.get('/comments', function(req, res)
                     return res.render('comments', {data: comments, userNames: userNames, postIds: postIds})
                 })
             })
-            //res.render('comments', {data:rows});           // Note the call to render() and not send(). Using render() ensures the templating engine
+             // Note the call to render() and not send(). Using render() ensures the templating engine
         })
                             
     });
@@ -177,6 +235,8 @@ app.get('/posts', function(req, res)
 
         let query2 = "SELECT name FROM Users;";
 
+        let query3 = "SELECT hashtag_id, description FROM Hashtags;";
+
         db.pool.query(query1, function(error, rows, fields){    //Execute the query
             // Saving the posts
             let posts = rows;
@@ -184,14 +244,15 @@ app.get('/posts', function(req, res)
             db.pool.query(query2, (error, rows, fields) => {
 
                 let userNames = rows;
-                return res.render('posts', {data: posts, userNames: userNames});
-            })
 
-            //res.render('posts', {data:rows});   // Render the posts.hbs file, and also send the renderer
-                                                // an object where 'data' is equal to the 'rows' we 
-                                                // received back from the query
-        })
+                db.pool.query(query3, (error, rows, fields) => {
+
+                    let hashtag = rows;
+                    return res.render('posts', {data: posts, userNames: userNames, hashtag: hashtag});
+                })
+            })
     });
+});
 
 app.get('/edit-post', function(req, res) {
     let postID = parseInt(req.query.id); // Retrieve the post ID from the query parameter
@@ -280,6 +341,85 @@ app.post('/add-user-ajax', function(req, res)
     })
 });
 
+app.post('/add-post-hashtag-ajax', function(req, res) 
+{   //add user function adapted from node.js starter guide for CS340
+
+    // Capture the incoming data and parse it back to a JS object
+    let data = req.body;
+
+    // Create the query and run it on the database
+    query1 = `INSERT INTO Posts_Hashtags (hashtag_id, post_id) VALUES ('${data.hashtag}', '${data.post}')`;
+    db.pool.query(query1, function(error, rows, fields){
+
+        // Check to see if there was an error
+        if (error) {
+
+            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+            console.log(error)
+            res.sendStatus(400);
+        }
+        else
+        {
+            // If there was no error, perform a SELECT * on Users
+            query2 = `SELECT * FROM Posts_Hashtags;`;
+            db.pool.query(query2, function(error, rows, fields){
+
+                // If there was an error on the second query, send a 400
+                if (error) {
+                    
+                    // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                    console.log(error);
+                    res.sendStatus(400);
+                }
+                // If all went well, send the results of the query back.
+                else
+                {
+                    res.send(rows);
+                }
+            })
+        }
+    })
+});
+
+app.post('/add-hashtag-ajax', function(req, res) 
+{   //add user function adapted from node.js starter guide for CS340
+
+    // Capture the incoming data and parse it back to a JS object
+    let data = req.body;
+
+    // Create the query and run it on the database
+    query1 = `INSERT INTO Hashtags (description) VALUES ('${data.name}')`;
+    db.pool.query(query1, function(error, rows, fields){
+
+        // Check to see if there was an error
+        if (error) {
+
+            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+            console.log(error)
+            res.sendStatus(400);
+        }
+        else
+        {
+            // If there was no error, perform a SELECT * on Users
+            query2 = `SELECT * FROM Hashtags;`;
+            db.pool.query(query2, function(error, rows, fields){
+
+                // If there was an error on the second query, send a 400
+                if (error) {
+                    
+                    // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                    console.log(error);
+                    res.sendStatus(400);
+                }
+                // If all went well, send the results of the query back.
+                else
+                {
+                    res.send(rows);
+                }
+            })
+        }
+    })
+});
 
 app.post('/add-post-form', function(req, res){
     // Capture the incoming data and parse it back to a JS object
@@ -331,6 +471,9 @@ app.post('/add-post-form', function(req, res){
         }
     });
 });
+  
+
+
 
 app.delete('/delete-post-ajax/', function(req,res,next){
     let data = req.body;
@@ -372,6 +515,50 @@ app.delete('/delete-user-ajax/', function(req,res,next){
   
           // Run the 1st query
           db.pool.query(deleteUser, [userID], function(error, rows, fields){
+              if (error) {
+  
+              // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+              console.log(error);
+              res.sendStatus(400);
+              }
+  
+              else
+              {
+                  res.sendStatus(204);
+              };
+  });
+});
+
+app.delete('/delete-post-hashtag-ajax/', function(req,res,next){
+    let data = req.body;
+    let post_hashID = parseInt(data.id);
+    let deletePostHash = `DELETE FROM Posts_Hashtags WHERE post_hash_id = ?`;
+  
+  
+          // Run the 1st query
+          db.pool.query(deletePostHash, [post_hashID], function(error, rows, fields){
+              if (error) {
+  
+              // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+              console.log(error);
+              res.sendStatus(400);
+              }
+  
+              else
+              {
+                  res.sendStatus(204);
+              };
+  });
+});
+
+app.delete('/delete-hashtag-ajax/', function(req,res,next){
+    let data = req.body;
+    let hashtagID = parseInt(data.id);
+    let deleteHashtag= `DELETE FROM Hashtags WHERE hashtag_id = ?`;
+  
+  
+          // Run the 1st query
+          db.pool.query(deleteHashtag, [hashtagID], function(error, rows, fields){
               if (error) {
   
               // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
@@ -508,6 +695,44 @@ app.put('/put-comment-ajax', function(req,res,next){
               {
                   // Run the second query
                   db.pool.query(selectComments, function(error, rows, fields) {
+  
+                      if (error) {
+                          console.log(error);
+                          res.sendStatus(400);
+                      } else {
+                          res.send(rows);
+                      }
+                  })
+              }
+  })
+});
+
+app.put('/put-hashtag-ajax', function(req,res,next){
+    let data = req.body;
+    let hashtagID = req.query.id;
+    
+    console.log('Received hashtagID: ', hashtagID);
+
+    let description = data.name;
+  
+    let queryUpdateHashtag = `UPDATE Hashtags SET description = ? WHERE Hashtags.hashtag_id = ?;`;
+    let selectHashtags = `SELECT * FROM Hashtags;`;
+  
+          // Run the 1st query
+          db.pool.query(queryUpdateHashtag, [description, hashtagID], function(error, rows, fields){
+              if (error) {
+  
+              // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+              console.log(error);
+              res.sendStatus(400);
+              }
+  
+              // If there was no error, we run our second query and return that data so we can use it to update the people's
+              // table on the front-end
+              else
+              {
+                  // Run the second query
+                  db.pool.query(selectHashtags, function(error, rows, fields) {
   
                       if (error) {
                           console.log(error);
