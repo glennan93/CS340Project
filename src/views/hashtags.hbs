@@ -1,0 +1,73 @@
+<!--//This file was adapted from CS340's nodejs starter app repo.-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SocialByte</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/app.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="/js/delete_hashtag.js"></script>
+</head>
+<body>
+    <div class="banner">
+      <h1>SocialByte</h1>
+    </div>    
+    <nav>
+        <a href="index">Home</a>
+        <a href="posts">Posts</a>
+        <a href="users">Users</a>
+        <a href="hashtags">Hashtags</a>
+        <a href="comments">Comments</a>
+        <a href="posts_hashtags">Posts_Hashtags</a>
+    
+      </nav>
+    <main>
+    <div class="container">
+	<h1>Current Hashtags</h1>
+	<table id="hashtag-table">
+		<thead>
+			<tr>
+                <th>Hashtag ID</th>
+				<th>Hashtag</th>
+				<th></th>
+                <th></th>
+			</tr>
+		</thead>
+		<tbody>
+            {{#each data}}
+			<!-- This is where the hashtags will be dynamically added -->
+            <tr id="hashtag-{{this.hashtag_id}}">
+
+                <td>{{this.hashtag_id}}</td>
+                <td>{{this.description}}</td>
+                <td><a href="edit-hashtag?id={{this.hashtag_id}}">Edit</a>
+                <td>                    
+                    <button onclick="deleteHashtag({{this.hashtag_id}})">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+            {{/each}}
+		</tbody>
+	</table>
+    </div>
+    <!-- Container to hold create new hashtag form -->
+    <div class="container">
+        <label><h1>Create a New Hashtag</h1></label> 
+        <form id="add-hashtag-form">            
+            <fieldset class="fields">
+                <label> Hashtag Name </label> <input type="text" id="hashtagName" name="hashtagName">
+            </fieldset> 
+            <input type="submit" value="Add Hashtag">
+        </form>
+        <script src="./js/add_hashtag.js"></script>
+
+    </div>
+    </main>
+    <footer>
+        <p>&copy; 2023 SocialByte</p>
+    </footer>
+</body>
+</html>

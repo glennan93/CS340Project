@@ -1,0 +1,113 @@
+<!--//This file was adapted from CS340's nodejs starter app repo.-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SocialByte</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/app.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="/js/delete_user.js"></script>
+  </head>
+  <body>
+    <div class="banner">
+      <h1>SocialByte</h1>
+    </div>    
+    <nav>
+        <a href="index">Home</a>
+        <a href="posts">Posts</a>
+        <a href="users">Users</a>
+        <a href="hashtags">Hashtags</a>
+        <a href="comments">Comments</a>
+        <a href="posts_hashtags">Posts_Hashtags</a>
+
+      </nav>
+    <main>
+        <!-- Container for Users 
+        Eventually these will auto populate from database -->
+        <div class="user-container">
+        <h1>Users</h1>
+        <h2>View, create, update or delete user information on this page.</h2>
+        <table id="user-table">
+            <thead>
+            <tr>            
+                <th>User ID</th>
+                <th>Name</th> 
+                <th>Email</th>
+                <th>Password</th>  
+                <th>Username</th>         
+                <th>About</th>
+                <th>Interests</th>
+                <th>Location</th>
+                <th>User Since</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+                {{#each data}}
+            <tr data-value={{this.user_id}}>            
+                <td>{{this.user_id}}</td>
+                <td>{{this.name}}</td>
+                <td>{{this.email}}</td>       
+                <td>******</td>
+                <td>{{this.username}}</td>
+                <td>{{this.about}}</td>
+                <td>{{this.interests}}</td>
+                <td>{{this.location}}</td>
+                <td>{{moment this.user_since format="DD MMMM - YYYY"}}</td>
+                <td><a href="edit-user?id={{this.user_id}}">Edit</td>
+                <td>
+                <button onclick="deleteUser({{this.user_id}})">
+                    Delete
+                </button>
+                </td>              
+            </tr>
+            {{/each}}
+            </tbody>
+        </table>
+        </div>
+
+        <!-- Container for users form to create new user -->
+        <div class="container-for-users">
+        <div class="user-container">
+            <label><h1>Create a New User</h1></label> 
+            <form id="add-user-form-ajax">            
+                <fieldset class="fields">
+
+                    <label for="name"> Name </label> 
+                    <input type="text" name="name" id="name">
+
+                    <label for="email"> Email</label> 
+                    <input type="text" name="email" id="email">
+
+                    <label for="password"> Password</label> 
+                    <input type="text" name="password" id="password">
+
+                    <label for="username"> Username</label> 
+                    <input type="text" name="username" id="username">
+
+                    <label for="about"> About</label> 
+                    <input type="text" name="about" id="about">
+
+                    <label for="interests" > Interests</label> 
+                    <input type="text" name="interests" id="interests">
+
+                    <label for="location"> Location</label> 
+                    <input type="text" name="location" id="location">
+
+                </fieldset> 
+                <input class="btn" type="submit" id="submitUser" value="Add User">
+            </form>
+
+        {{!-- Embed javascript to handle the DOM manipulation and AJAX request--}}
+        <script src="./js/add_user.js"></script>
+        </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2023 SocialByte</p>
+    </footer>
+  </body>
+</html>
