@@ -1,8 +1,12 @@
 -- This file is original to our group
 -- Selecting all posts with the user that posted them and the posts' contents and the hashtags associated with post
-SELECT p.post_id, u.name AS author_name, p.contents AS post_contents, h.description AS hashtag_description 
-FROM Posts p INNER JOIN Users u ON p.author = u.user_id 
-LEFT JOIN Posts_Hashtags ph ON p.post_id = ph.post_id LEFT JOIN Hashtags h ON ph.hashtag_id = h.hashtag_id;
+SELECT p.post_id, u.name AS author_name, p.contents AS post_contents, GROUP_CONCAT(h.description SEPARATOR ', ') AS hashtags
+FROM Posts p
+INNER JOIN Users u ON p.author = u.user_id
+LEFT JOIN Posts_Hashtags ph ON p.post_id = ph.post_id
+LEFT JOIN Hashtags h ON ph.hashtag_id = h.hashtag_id
+GROUP BY
+    p.post_id, u.name, p.contents;
 
 -- Selecting all comments 
 SELECT *
