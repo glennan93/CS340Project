@@ -1,0 +1,118 @@
+<!--//This file was adapted from CS340's nodejs starter app repo.-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SocialByte - Edit User</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/app.css">
+    <script src="/js/delete_user.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+  </head>
+  <body>
+    <div class="banner">
+      <h1>SocialByte</h1>
+    </div>    
+    <nav>
+      <a href="index">Home</a>
+      <a href="posts">Posts</a>
+      <a href="users">Users</a>
+      <a href="hashtags">Hashtags</a>
+      <a href="comments">Comments</a>
+      <a href="posts_hashtags">Posts_Hashtags</a>
+
+    </nav>
+    <main>
+        <script>
+            // Retrieve the User ID from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = urlParams.get('id');
+        </script>
+    <!-- container for user edit form. -->
+    <div class="user-edit-container">
+        <label><h1>Edit User</h1></label> 
+        <form id="edit-user-form-ajax">            
+            <fieldset class="fields">
+                <!--We will fill these fields in the future with information from that user-->
+                
+
+                <label for="name"> Name </label> 
+                <input type="text" name="name" id="name" value="{{selectedUser.name}}">
+
+                <label for="email"> Email</label> 
+                <input type="text" name="email" id="email" value="{{selectedUser.email}}">
+
+                <label for="password"> Password</label> 
+                <input type="text" name="password" id="password" value="******">
+
+                <label for="username"> Username</label> 
+                <input type="text" name="username" id="username" value="{{selectedUser.username}}">
+
+                <label for="about"> About</label> 
+                <textarea name="about" id="about" rows="3" >{{selectedUser.about}}</textarea>
+
+                <label for="interests" > Interests</label> 
+                <textarea name="interests" id="interests" rows="3">{{selectedUser.interests}}</textarea>
+
+                <label for="location"> Location</label> 
+                <input type="text" name="location" id="location" value="{{selectedUser.location}}">
+            </fieldset>
+
+          <input type="submit">
+        </form>
+
+    </div>
+
+    <!-- container for users table -->
+    <div class="user-container">
+        <h1>Users</h1>
+        <h2>View, create, update or delete user information on this page.</h2>
+        <table id="user-table">
+            <thead>
+            <tr>            
+                <th>User ID</th>
+                <th>Name</th> 
+                <th>Email</th>
+                <th>Password</th>  
+                <th>Username</th>         
+                <th>About</th>
+                <th>Interests</th>
+                <th>Location</th>
+                <th>User Since</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+                {{#each data}}
+            <tr data-value={{this.user_id}}>            
+                <td>{{this.user_id}}</td>
+                <td>{{this.name}}</td>
+                <td>{{this.email}}</td>       
+                <td>******</td>
+                <td>{{this.username}}</td>
+                <td>{{this.about}}</td>
+                <td>{{this.interests}}</td>
+                <td>{{this.location}}</td>
+                <td>{{moment this.user_since format="DD MMMM - YYYY"}}</td>
+                <td><a href="edit-user?id={{this.user_id}}">Edit</td>
+                <td>
+                <button onclick="deleteUser({{this.user_id}})">
+                    Delete
+                </button>
+                </td>              
+            </tr>
+            {{/each}}
+            </tbody>
+        </table>
+        </div>
+
+    </main>
+    <footer>
+      <p>&copy; 2023 SocialByte</p>
+    </footer>
+    <script src="/js/update_user.js"></script>
+  </body>
+</html>

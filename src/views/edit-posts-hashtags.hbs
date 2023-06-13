@@ -1,0 +1,85 @@
+<!--//This file was adapted from CS340's nodejs starter app repo.-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SocialByte</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/app.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="/js/delete_post_hashtag.js"></script>
+</head>
+<body>
+    <div class="banner">
+      <h1>SocialByte</h1>
+    </div>    
+    <nav>
+        <a href="index">Home</a>
+        <a href="posts">Posts</a>
+        <a href="users">Users</a>
+        <a href="hashtags">Hashtags</a>
+        <a href="comments">Comments</a>
+        <a href="posts_hashtags">Posts_Hashtags</a>
+      </nav>
+    <main>
+        <!-- Container to hold create new hashtag form -->
+    <div class="container">
+        <label><h1>Edit Hashtag in Post</h1></label> 
+        <form id="editPostHashtag">            
+            <fieldset class="fields">
+                <label for="hashtag">Select a new hashtag</label>
+                <select name="hashtag" id="hashtag">
+                    <option value="">Select a Hashtag</option>
+                    {{#each hashID}}
+                    <option value="{{this.hashtag_id}}">{{this.hashtag_id}}</option>
+                    {{/each}} 
+                </select>
+
+                           
+                </fieldset> 
+            <input type="submit" value="Edit Hashtag">
+        </form>
+
+    </div>
+
+
+    <div class="container">
+	<h1>Posts_Hashtags</h1>
+	<table id="posts_hashtags-table">
+		<thead>
+			<tr>
+                <th>Post_Hashtag ID</th>
+				<th>Hashtag_ID</th>
+				<th>Post_ID</th>
+                <th></th>
+                <th></th>
+			</tr>
+		</thead>
+		<tbody>
+            {{#each postHashTable}}
+			<!-- This is where the hashtags will be dynamically added -->
+            <tr id="post_hashtag-{{this.post_hash_id}}">
+
+                <td>{{this.post_hash_id}}</td>
+                <td>{{this.hashtag_id}}</td>
+                <td>{{this.post_id}}</td>
+                <td><a href="edit-post_hashtag?id={{this.post_hash_id}}">Edit</a>
+                <td>                    
+                    <button onclick="deletePostHashtag({{this.post_hash_id}})">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+            {{/each}}
+		</tbody>
+	</table>
+    </div>
+    </main>
+    <footer>
+        <p>&copy; 2023 SocialByte</p>
+    </footer>
+    <script src="/js/update_post_hashtag.js"></script>
+
+</body>
+</html>
