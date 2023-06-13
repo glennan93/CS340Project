@@ -190,7 +190,7 @@ app.get('/posts_hashtags', function(req, res)
     
      //execute the query
      db.pool.query(query1, function(error, rows, fields){
-        // Saving comments
+        
         let table = rows
         db.pool.query(query2, (error, rows, fields) => {
             let hashtags = rows;
@@ -236,7 +236,7 @@ app.get('/comments', function(req, res)
         let query3 = "SELECT post_id FROM Posts;";
         //execute the query
         db.pool.query(query1, function(error, rows, fields){
-            // Saving comments
+            
             let comments = rows;
 
             db.pool.query(query2, (error, rows, fields) => {
@@ -255,8 +255,18 @@ app.get('/comments', function(req, res)
 app.get('/posts', function(req, res)
     {
         //query db on page load
-        let query1 = `SELECT p.post_id, u.name AS author_name, p.contents AS post_contents, h.description AS hashtag_description FROM Posts p INNER JOIN Users u ON p.author = u.user_id LEFT JOIN Posts_Hashtags ph ON p.post_id = ph.post_id LEFT JOIN Hashtags h ON ph.hashtag_id = h.hashtag_id;`;
-    
+        let query1 = `SELECT
+        p.post_id,
+        u.name AS author_name,
+        p.contents AS post_contents,
+        GROUP_CONCAT(h.description SEPARATOR ', ') AS hashtags
+    FROM
+        Posts p
+        INNER JOIN Users u ON p.author = u.user_id
+        LEFT JOIN Posts_Hashtags ph ON p.post_id = ph.post_id
+        LEFT JOIN Hashtags h ON ph.hashtag_id = h.hashtag_id
+    GROUP BY
+        p.post_id, u.name, p.contents;`;
         console.log(query1);
 
         let query2 = "SELECT name FROM Users;";
@@ -340,7 +350,6 @@ app.post('/add-user-ajax', function(req, res)
         // Check to see if there was an error
         if (error) {
 
-            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
             console.log(error)
             res.sendStatus(400);
         }
@@ -353,11 +362,9 @@ app.post('/add-user-ajax', function(req, res)
                 // If there was an error on the second query, send a 400
                 if (error) {
                     
-                    // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
                     console.log(error);
                     res.sendStatus(400);
                 }
-                // If all went well, send the results of the query back.
                 else
                 {
                     res.send(rows);
@@ -380,20 +387,17 @@ app.post('/add-post-hashtag-ajax', function(req, res)
         // Check to see if there was an error
         if (error) {
 
-            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
             console.log(error)
             res.sendStatus(400);
         }
         else
         {
-            // If there was no error, perform a SELECT * on Users
             query2 = `SELECT * FROM Posts_Hashtags;`;
             db.pool.query(query2, function(error, rows, fields){
 
                 // If there was an error on the second query, send a 400
                 if (error) {
                     
-                    // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
                     console.log(error);
                     res.sendStatus(400);
                 }
@@ -420,20 +424,17 @@ app.post('/add-hashtag-ajax', function(req, res)
         // Check to see if there was an error
         if (error) {
 
-            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
             console.log(error)
             res.sendStatus(400);
         }
         else
         {
-            // If there was no error, perform a SELECT * on Users
             query2 = `SELECT * FROM Hashtags;`;
             db.pool.query(query2, function(error, rows, fields){
 
                 // If there was an error on the second query, send a 400
                 if (error) {
                     
-                    // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
                     console.log(error);
                     res.sendStatus(400);
                 }
@@ -548,7 +549,6 @@ app.delete('/delete-user-ajax/', function(req,res,next){
           db.pool.query(deleteUser, [userID], function(error, rows, fields){
               if (error) {
   
-              // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
               console.log(error);
               res.sendStatus(400);
               }
@@ -570,7 +570,6 @@ app.delete('/delete-post-hashtag-ajax/', function(req,res,next){
           db.pool.query(deletePostHash, [post_hashID], function(error, rows, fields){
               if (error) {
   
-              // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
               console.log(error);
               res.sendStatus(400);
               }
@@ -592,7 +591,6 @@ app.delete('/delete-hashtag-ajax/', function(req,res,next){
           db.pool.query(deleteHashtag, [hashtagID], function(error, rows, fields){
               if (error) {
   
-              // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
               console.log(error);
               res.sendStatus(400);
               }
@@ -614,7 +612,6 @@ app.delete('/delete-comment-ajax/', function(req,res,next){
           db.pool.query(deleteComment, [commentID], function(error, rows, fields){
               if (error) {
   
-              // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
               console.log(error);
               res.sendStatus(400);
               }
@@ -677,13 +674,9 @@ app.put('/put-user-ajax', function(req,res,next){
           db.pool.query(queryUpdateUser, [name, email, password, username, about, interests, location, userID], function(error, rows, fields){
               if (error) {
   
-              // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
               console.log(error);
               res.sendStatus(400);
               }
-  
-              // If there was no error, we run our second query and return that data so we can use it to update the people's
-              // table on the front-end
               else
               {
                   // Run the second query
@@ -715,13 +708,10 @@ app.put('/put-comment-ajax', function(req,res,next){
           db.pool.query(queryUpdateComment, [contents, commentID], function(error, rows, fields){
               if (error) {
   
-              // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
               console.log(error);
               res.sendStatus(400);
               }
   
-              // If there was no error, we run our second query and return that data so we can use it to update the people's
-              // table on the front-end
               else
               {
                   // Run the second query
@@ -752,13 +742,10 @@ app.put('/put-postHashtag-ajax', function(req,res,next){
           db.pool.query(queryUpdateHashtag, [data.hashtag, postHashtagID], function(error, rows, fields){
               if (error) {
   
-              // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
               console.log(error);
               res.sendStatus(400);
               }
   
-              // If there was no error, we run our second query and return that data so we can use it to update the people's
-              // table on the front-end
               else
               {
                   // Run the second query
@@ -790,13 +777,10 @@ app.put('/put-hashtag-ajax', function(req,res,next){
           db.pool.query(queryUpdateHashtag, [description, hashtagID], function(error, rows, fields){
               if (error) {
   
-              // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
               console.log(error);
               res.sendStatus(400);
               }
   
-              // If there was no error, we run our second query and return that data so we can use it to update the people's
-              // table on the front-end
               else
               {
                   // Run the second query
@@ -821,7 +805,7 @@ app.post('/add-comment-form', function(req, res){
     let getUserQuery = `SELECT user_id FROM Users WHERE name = '${data['commentAuthor']}'`;
     let getPostQuery = `SELECT post_id FROM Posts WHERE post_id = '${data['parentPost']}'`;
 
-    // Checking if the user exists in the database
+    // Check if the user exists in the database
     db.pool.query(getUserQuery, function(error, rows, fields){
         if (error) {
             window.alert('User not found.');
@@ -843,13 +827,10 @@ app.post('/add-comment-form', function(req, res){
                                 // Check to see if there was an error
                                 if (error) {
                     
-                                    // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
                                     console.log(error)
                                     res.sendStatus(400);
                                 }
                     
-                                // If there was no error, we redirect back to our root route, which automatically runs the SELECT * FROM bsg_people and
-                                // presents it on the screen
                                 else
                                 {
                                     res.redirect('/comments');
